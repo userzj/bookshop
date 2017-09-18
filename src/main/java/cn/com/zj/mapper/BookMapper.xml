@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zj.mapper.BookMapper">
+   <resultMap id="BaseResultMap" type="cn.com.zj.pojo.Book" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="bookname" property="bookname" jdbcType="VARCHAR" />
+    <result column="bookclass" property="bookclass" jdbcType="INTEGER" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="publish" property="publish" jdbcType="VARCHAR" />
+    <result column="bookNo" property="bookno" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="REAL" />
+    <result column="Amount" property="amount" jdbcType="INTEGER" />
+    <result column="Leav_number" property="leavNumber" jdbcType="INTEGER" />
+    <result column="picture" property="picture" jdbcType="VARCHAR" />
+    <result column="reg_time" property="regTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.com.zj.pojo.Book" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <select id="selectTheLackBooks" resultMap="BaseResultMap" >
+    SELECT * FROM book WHERE Leav_number <![CDATA[ <  ]]> 10
+  </select>
+  
+  <select id="searchBooksAsclassification" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT * FROM book WHERE bookclass = #{bookclass}
+  </select>
+  
+  <select id="searchBooksNoClass" resultMap="BaseResultMap" parameterType="cn.com.zj.pojo.Book" >
+    SELECT * FROM book WHERE bookname like  #{bookname}
+  </select>
+  
+  <select id="searchBooksWithClass" resultMap="BaseResultMap" parameterType="cn.com.zj.pojo.Book" >
+    SELECT * FROM book WHERE bookname like #{bookname} and bookclass = #{bookclass}
+  </select>
+  
+  
+  <!--查询所有书籍信息 -->
+  <select id="selectAllBooks" resultMap="BaseResultMap" >
+   SELECT * FROM book  
+  </select>
+  <select id="selectOffLinefBooks" resultMap="BaseResultMap">
+   SELECT * FROM book  where status = 0
+  </select>
+  
+   <select id="selectBookNum" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+   SELECT Leav_number FROM book  where id = #{id}
+  </select>
+   <select id="selectOnLinefBooks" resultMap="BaseResultMap">
+   SELECT * FROM book  where status = 1
+  </select>
+  
+  <sql id="Base_Column_List" >
+    ID, bookname, bookclass, author, publish, bookNo, price, Amount, Leav_number, picture, 
+    reg_time
+  </sql>
+  
+  
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from book
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from book
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  
+  <insert id="insert" parameterType="cn.com.zj.pojo.Book" >
+    insert into book (ID, bookname, bookclass, 
+      author, publish, bookNo, 
+      price, Amount, Leav_number, 
+      picture, reg_time, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{bookname,jdbcType=VARCHAR}, #{bookclass,jdbcType=INTEGER}, 
+      #{author,jdbcType=VARCHAR}, #{publish,jdbcType=VARCHAR}, #{bookno,jdbcType=VARCHAR}, 
+      #{price,jdbcType=REAL}, #{amount,jdbcType=INTEGER}, #{leavNumber,jdbcType=INTEGER}, 
+      #{picture,jdbcType=VARCHAR}, #{regTime,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  
+  
+  
+  <insert id="insertSelective" parameterType="cn.com.zj.pojo.Book" >
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="bookname != null" >
+        bookname,
+      </if>
+       <if test="status != null" >
+        status,
+      </if>
+      <if test="bookclass != null" >
+        bookclass,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="publish != null" >
+        publish,
+      </if>
+      <if test="bookno != null" >
+        bookNo,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="amount != null" >
+        Amount,
+      </if>
+      <if test="leavNumber != null" >
+        Leav_number,
+      </if>
+      <if test="picture != null" >
+        picture,
+      </if>
+      <if test="regTime != null" >
+        reg_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookname != null" >
+        #{bookname,jdbcType=VARCHAR},
+      </if>
+       <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="bookclass != null" >
+        #{bookclass,jdbcType=INTEGER},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null" >
+        #{publish,jdbcType=VARCHAR},
+      </if>
+      <if test="bookno != null" >
+        #{bookno,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=REAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="leavNumber != null" >
+        #{leavNumber,jdbcType=INTEGER},
+      </if>
+      <if test="picture != null" >
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        #{regTime,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.zj.pojo.Book" >
+    update book
+    <set >
+      <if test="bookname != null" >
+        bookname = #{bookname,jdbcType=VARCHAR},
+      </if>
+      <if test="bookclass != null" >
+        bookclass = #{bookclass,jdbcType=INTEGER},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null" >
+        publish = #{publish,jdbcType=VARCHAR},
+      </if>
+      <if test="bookno != null" >
+        bookNo = #{bookno,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="amount != null" >
+        Amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="leavNumber != null" >
+        Leav_number = #{leavNumber,jdbcType=INTEGER},
+      </if>
+      <if test="picture != null" >
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        reg_time = #{regTime,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.com.zj.pojo.Book" >
+    update book
+    set bookname = #{bookname,jdbcType=VARCHAR},
+      bookclass = #{bookclass,jdbcType=INTEGER},
+      author = #{author,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=VARCHAR},
+      bookNo = #{bookno,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      Amount = #{amount,jdbcType=INTEGER},
+      Leav_number = #{leavNumber,jdbcType=INTEGER},
+       status = #{status,jdbcType=INTEGER},
+      picture = #{picture,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="goOnLineUpdate">
+  
+   update book set  status = 1  where ID = #{id,jdbcType=INTEGER}
+  
+  </update>
+  
+  <update id="bookLess" parameterType="cn.com.zj.pojo.Book">
+  
+   update book set  Leav_number = #{leavNumber,jdbcType=INTEGER}  where ID = #{id,jdbcType=INTEGER}
+  
+  </update>
+  
+   <update id="goOffLineUpdate">
+  
+   update book set  status = 0  where ID = #{id,jdbcType=INTEGER}
+  
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="cn.com.zj.pojo.Book" >
+    update book
+    set bookname = #{bookname,jdbcType=VARCHAR},
+      bookclass = #{bookclass,jdbcType=INTEGER},
+      author = #{author,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=VARCHAR},
+      bookNo = #{bookno,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      Amount = #{amount,jdbcType=INTEGER},
+      Leav_number = #{leavNumber,jdbcType=INTEGER},
+      picture = #{picture,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  </mapper>

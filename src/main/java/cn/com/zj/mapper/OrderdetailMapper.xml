@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zj.mapper.OrderdetailMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zj.pojo.Orderdetail" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="orderid" property="orderid" jdbcType="INTEGER" />
+    <result column="bookid" property="bookid" jdbcType="INTEGER" />
+    <result column="singalnum" property="singalnum" jdbcType="INTEGER" />
+  </resultMap>
+   <resultMap id="OrderOrderDetailMap" type="cn.com.zj.pojo.Orders" >
+   	 	<id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="submit_time" property="submitTime" jdbcType="VARCHAR" />
+    <result column="consignmentTime" property="consignmenttime" jdbcType="VARCHAR" />
+    <result column="totalprice" property="totalprice" jdbcType="REAL" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="isPayoff" property="ispayoff" jdbcType="INTEGER" />
+    <result column="isGo" property="isgo" jdbcType="INTEGER" />
+   <collection property="orderDetailList"  ofType="cn.com.zj.pojo.Orderdetail">
+   		 <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="orderid" property="orderid" jdbcType="INTEGER" />
+    <result column="bookid" property="bookid" jdbcType="INTEGER" />
+    <result column="singalnum" property="singalnum" jdbcType="INTEGER" />
+   </collection>
+  </resultMap>
+  
+  <select id="selectAllOrders" resultType="cn.com.zj.pojo.OrderOrderDetail" >
+ SELECT `order`.STATUS,`order`.isGo,`order`.isPayoff,`order`.content,`order`.totalprice,`order`.number,orderdetail.*,
+ book.bookname FROM `order`,orderdetail,book WHERE `order`.ID = orderdetail.orderid 
+ AND book.ID = orderdetail.bookid
+  
+  </select>
+  
+   <select id="OrderOrderDetailList" resultType="cn.com.zj.pojo.OrderOrderDetail" parameterType="java.lang.Integer">
+	SELECT `order`.*,orderdetail.singalnum,book.bookname FROM `order`,orderdetail,book WHERE 
+	`order`.ID = orderdetail.orderid AND orderdetail.orderid = #{orderid} AND `order`.user_id = #{userid} AND
+	 book.ID = orderdetail.bookid
+  </select>
+  
+  
+  <sql id="Base_Column_List" >
+    ID, orderid, bookid, singalnum
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetail
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderdetail
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.com.zj.pojo.Orderdetail" >
+    insert into orderdetail (ID, orderid, bookid, 
+      singalnum)
+    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER}, 
+      #{singalnum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.zj.pojo.Orderdetail" >
+    insert into orderdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderid != null" >
+        orderid,
+         </if>
+         <if test="status != null" >
+        status,
+      </if>
+      <if test="bookid != null" >
+        bookid,
+      </if>
+      <if test="singalnum != null" >
+        singalnum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=INTEGER},
+      </if>
+        <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null" >
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="singalnum != null" >
+        #{singalnum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.zj.pojo.Orderdetail" >
+    update orderdetail
+    <set >
+      <if test="orderid != null" >
+        orderid = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null" >
+        bookid = #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="singalnum != null" >
+        singalnum = #{singalnum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.zj.pojo.Orderdetail" >
+    update orderdetail
+    set orderid = #{orderid,jdbcType=INTEGER},
+      bookid = #{bookid,jdbcType=INTEGER},
+      singalnum = #{singalnum,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

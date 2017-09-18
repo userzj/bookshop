@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.zj.mapper.BookadminMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.zj.pojo.Bookadmin" >
+    <result column="AdminUname" property="adminuname" jdbcType="VARCHAR" />
+    <result column="AdminPwd" property="adminpwd" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="cn.com.zj.pojo.Bookadmin" >
+    insert into bookadmin (AdminUname, AdminPwd)
+    values (#{adminuname,jdbcType=VARCHAR}, #{adminpwd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.zj.pojo.Bookadmin" >
+    insert into bookadmin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adminuname != null" >
+        AdminUname,
+      </if>
+      <if test="adminpwd != null" >
+        AdminPwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adminuname != null" >
+        #{adminuname,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpwd != null" >
+        #{adminpwd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="AdminLoginSelect" parameterType="cn.com.zj.pojo.Bookadmin" resultType="cn.com.zj.pojo.Bookadmin">
+    select * from bookadmin where AdminUname = #{adminuname} and  AdminPwd = #{adminpwd}
+  </select>
+  
+   <select id="selectAllAdmin" resultMap="BaseResultMap" >
+   SELECT * FROM bookadmin  
+  </select>
+
+</mapper>
